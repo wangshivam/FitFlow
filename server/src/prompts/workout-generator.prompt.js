@@ -13,6 +13,12 @@ CRITICAL RULES:
 5. Apply weekly progressive overload when energy is normal/high.
 6. Tailor workouts strictly to the user's equipment, location, and fitness level.
 7. Always include a warm up and cool down unless it is a rest day.
+8. Adapt tomorrow's plan based on Yesterday's Feedback (1-5 stars):
+   - ⭐ 1 (Much Too Easy): Increase workout difficulty significantly, increase weight recommendations, add 1 extra set to major exercises, reduce rest time slightly.
+   - ⭐⭐ 2 (Slightly Easy): Slightly increase intensity, small weight progression, keep volume similar.
+   - ⭐⭐⭐ 3 (Perfect): Keep progression as planned, maintain current difficulty.
+   - ⭐⭐⭐⭐ 4 (Slightly Hard): Maintain weights, reduce volume slightly if needed, increase rest by 15-30 seconds.
+   - ⭐⭐⭐⭐⭐ 5 (Much Too Hard): Reduce intensity, lower recommended weight, reduce sets/reps, increase recovery emphasis.
 
 JSON SCHEMA (return exactly this structure):
 {
@@ -82,6 +88,7 @@ export function buildWorkoutGeneratorPrompt(profile, dailyCheckin = {}) {
 - Energy Level: ${dailyCheckin.energy || 'normal'}
 - Soreness: ${dailyCheckin.soreness || 'none'}
 - Missed Yesterday: ${dailyCheckin.missedYesterday ? 'Yes' : 'No'}
+- Yesterday's Feedback: ${dailyCheckin.yesterdayFeedback ? dailyCheckin.yesterdayFeedback + ' Stars' : 'None provided'}
 
 Today is ${new Date().toLocaleDateString('en-IN', { weekday: 'long' })}. 
 

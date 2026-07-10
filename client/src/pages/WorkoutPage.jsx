@@ -5,7 +5,7 @@ import { plannerAPI } from '../api';
 import {
   Dumbbell, Flame, Clock, CheckCircle2, Check,
   ChevronDown, ChevronLeft, ChevronRight, Moon,
-  Zap, RefreshCw, Loader2, Trophy, Sparkles, Circle,
+  Zap, RefreshCw, Loader2, Trophy, Sparkles, Circle, Star
 } from 'lucide-react';
 import './WorkoutPage.css';
 
@@ -386,14 +386,10 @@ function WorkoutSkeleton() {
 // MAIN WORKOUT PAGE
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-const FEEDBACK_OPTIONS = [
-  { value: 'too_easy', label: 'Too Easy', emoji: '😎', color: 'blue' },
-  { value: 'perfect', label: 'Perfect!', emoji: '🎯', color: 'green' },
-  { value: 'too_hard', label: 'Too Hard', emoji: '😓', color: 'orange' },
-];
+
 
 export default function WorkoutPage() {
-  const { profile, isOnboarded } = useAuth();
+  const { isOnboarded } = useAuth();
   const [selectedDate, setSelectedDate] = useState(isoDate(new Date()));
   const [plan, setPlan] = useState(null);
   const [weekPlans, setWeekPlans] = useState([]);
@@ -402,7 +398,8 @@ export default function WorkoutPage() {
   const [completedExercises, setCompletedExercises] = useState([]);
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
-  const [selectedFeedback, setSelectedFeedback] = useState(null);
+  const [selectedFeedback, setSelectedFeedback] = useState(null); // Will now hold '1', '2', '3', '4', '5'
+  const [hoveredStar, setHoveredStar] = useState(0);
   const [completing, setCompleting] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
 
@@ -533,6 +530,7 @@ export default function WorkoutPage() {
     setShowFeedback(false);
     setShowCelebration(false);
     setSelectedFeedback(null);
+    setHoveredStar(0);
   };
 
   // ── Render ──
@@ -768,22 +766,36 @@ export default function WorkoutPage() {
             >
               <h3>How was your workout?</h3>
               <p>Your feedback helps us tailor tomorrow's plan</p>
-              <div className="wk__feedback-options">
-                {FEEDBACK_OPTIONS.map((opt) => (
+              <div className="wk__feedback-stars">
+                {[1, 2, 3, 4, 5].map((star) => (
                   <button
-                    key={opt.value}
-                    className={`wk__feedback-btn ${selectedFeedback === opt.value ? `wk__feedback-btn--selected wk__feedback-btn--${opt.color}` : ''}`}
-                    onClick={() => setSelectedFeedback(opt.value)}
+                    key={star}
+                    type="button"
+                    className={`wk__feedback-star-btn ${(hoveredStar || parseInt(selectedFeedback) || 0) >= star ? 'wk__feedback-star-btn--filled' : ''}`}
+                    onMouseEnter={() => setHoveredStar(star)}
+                    onMouseLeave={() => setHoveredStar(0)}
+                    onClick={() => setSelectedFeedback(String(star))}
+                    aria-label={`Rate ${star} stars`}
                   >
-                    <span className="wk__feedback-emoji">{opt.emoji}</span>
-                    <span>{opt.label}</span>
+                    <Star
+                      size={44}
+                      className="wk__feedback-star-icon"
+                      fill={(hoveredStar || parseInt(selectedFeedback) || 0) >= star ? "currentColor" : "none"}
+                    />
                   </button>
                 ))}
+              </div>
+              <div className="wk__feedback-legend">
+                <div className="wk__legend-item"><span>1 Star</span> = Much Too Easy</div>
+                <div className="wk__legend-item"><span>2 Stars</span> = Slightly Easy</div>
+                <div className="wk__legend-item"><span>3 Stars</span> = Perfect</div>
+                <div className="wk__legend-item"><span>4 Stars</span> = Slightly Hard</div>
+                <div className="wk__legend-item"><span>5 Stars</span> = Much Too Hard</div>
               </div>
               <div className="wk__feedback-actions">
                 <button
                   className="wk__feedback-cancel"
-                  onClick={() => { setShowFeedback(false); setShowCelebration(false); }}
+                  onClick={() => { setShowFeedback(false); setShowCelebration(false); setHoveredStar(0); }}
                 >
                   Skip
                 </button>

@@ -40,8 +40,9 @@ router.get('/today', async (req, res, next) => {
         .where({ user_id: req.user.id, plan_date: yesterdayStr })
         .first();
       const missedYesterday = yesterdayPlan && yesterdayPlan.status !== 'completed';
+      const yesterdayFeedback = yesterdayPlan ? yesterdayPlan.feedback : null;
 
-      const dailyCheckin = { energy: 'normal', soreness: 'none', missedYesterday };
+      const dailyCheckin = { energy: 'normal', soreness: 'none', missedYesterday, yesterdayFeedback };
       const generated = await generateWorkoutPlan(profile, dailyCheckin);
 
       const planData = {
@@ -139,7 +140,15 @@ router.post('/regenerate', async (req, res, next) => {
       return res.status(400).json({ error: 'Profile not found.' });
     }
 
-    const dailyCheckin = { energy, soreness, missedYesterday, reason };
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = yesterday.toISOString().split('T')[0];
+    const yesterdayPlan = await db('workout_plans')
+      .where({ user_id: req.user.id, plan_date: yesterdayStr })
+      .first();
+    const yesterdayFeedback = yesterdayPlan ? yesterdayPlan.feedback : null;
+
+    const dailyCheckin = { energy, soreness, missedYesterday, reason, yesterdayFeedback };
     const generated = await generateWorkoutPlan(profile, dailyCheckin);
 
     // Upsert plan
