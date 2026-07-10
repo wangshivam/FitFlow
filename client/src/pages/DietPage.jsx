@@ -3,8 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { foodAPI } from '../api';
 import {
-  Send, Image, Camera, Trash2, Loader2,
-  CheckCircle2, AlertCircle, X, Search,
+  Send, Camera, Trash2, Loader2,
+  CheckCircle2, AlertCircle, Search,
   ChevronDown, ChevronLeft, ChevronRight,
 } from 'lucide-react';
 import { FoodSearchModal } from '../components/shared';
@@ -75,14 +75,7 @@ const MONTH_NAMES = [
   'July', 'August', 'September', 'October', 'November', 'December',
 ];
 
-const DEFAULT_CHIPS = [
-  '2 roti + sabzi',
-  '1 plate poha',
-  'chai',
-  'dal chawal',
-  'paneer bhurji',
-  'walk 20 mins',
-];
+
 
 /**
  * Build a 6-row × 7-col grid of Date objects for a given month.
@@ -425,32 +418,7 @@ function FeedItem({ log, onDelete, onEdit, isDeleting }) {
   );
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Suggestion Chips
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-function SuggestionChips({ onSelect, visible }) {
-  if (!visible) return null;
-
-  return (
-    <div className="diet-v2__chips-wrap">
-      <div className="diet-v2__chips-inner">
-        <div className="diet-v2__chips">
-          {DEFAULT_CHIPS.map((chip) => (
-            <button
-              key={chip}
-              className="diet-v2__chip"
-              onClick={() => onSelect(chip)}
-              type="button"
-            >
-              {chip}
-            </button>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Inline Confirmation Panel
@@ -836,13 +804,7 @@ export default function DietPage() {
     }
   };
 
-  // ── Chip selection ──
-  const handleChipSelect = (chip) => {
-    setInputText(chip);
-    // Focus the input
-    const el = document.getElementById('diet-input');
-    if (el) el.focus();
-  };
+
 
   // ── Edit log ──
   const handleEdit = (log) => {
@@ -920,8 +882,7 @@ export default function DietPage() {
         </div>
       )}
 
-      {/* Suggestion Chips */}
-      <SuggestionChips onSelect={handleChipSelect} visible={!showConfirm} />
+
 
       {/* Inline Confirmation Panel */}
       <AnimatePresence>
