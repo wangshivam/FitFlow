@@ -1,0 +1,64 @@
+.daily-checkin-modal {
+  padding: 10px;
+}
+
+.daily-checkin__intro {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.daily-checkin__section {
+  margin-bottom: 24px;
+}
+
+.daily-checkin__label {
+  display: block;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  font-size: 0.95rem;
+}
+
+.daily-checkin__options {
+  display: flex;
+  gap: 8px;
+}
+
+.daily-checkin__btn {
+  flex: 1;
+  padding: 12px 8px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.daily-checkin__btn:hover {
+  background: var(--surface-hover);
+}
+
+.daily-checkin__btn--selected {
+  border-color: var(--primary);
+  background: var(--primary-transparent);
+  color: var(--primary);
+}
+
+.daily-checkin__emoji {
+  font-size: 1.25rem;
+}
+
+.daily-checkin__actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 32px;
+}

@@ -1,0 +1,1083 @@
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   Diet Page v2 — Journable-inspired AI-first layout
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.diet-v2 {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: 560px;
+  margin: 0 auto;
+  padding-bottom: 160px; /* room for sticky input + chips */
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SECTION 0 — Month Header + Full Calendar
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.diet-v2__month-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-family);
+  -webkit-tap-highlight-color: transparent;
+  border-radius: var(--radius-lg);
+  transition: background var(--transition-fast);
+}
+
+.diet-v2__month-header:hover {
+  background: var(--color-neutral-100);
+}
+
+.diet-v2__month-label {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+
+.diet-v2__month-chevron {
+  color: var(--color-text-muted);
+  transition: transform var(--transition-base);
+}
+
+.diet-v2__month-chevron--open {
+  transform: rotate(180deg);
+}
+
+/* ── Full Calendar ── */
+.diet-v2__calendar {
+  overflow: hidden;
+  background: white;
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-neutral-200);
+}
+
+.diet-v2__cal-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+}
+
+.diet-v2__cal-nav-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.diet-v2__cal-nav-btn:hover:not(:disabled) {
+  background: var(--color-neutral-100);
+  color: var(--color-text-primary);
+}
+
+.diet-v2__cal-nav-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.diet-v2__cal-month {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.diet-v2__cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  padding: 0 var(--space-3) var(--space-4);
+}
+
+.diet-v2__cal-head {
+  text-align: center;
+  font-size: 11px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-muted);
+  padding: var(--space-1) 0 var(--space-2);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.diet-v2__cal-day {
+  width: 100%;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  border-radius: var(--radius-lg);
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-family: var(--font-family);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.diet-v2__cal-day:hover:not(:disabled) {
+  background: var(--color-neutral-100);
+}
+
+.diet-v2__cal-day--outside {
+  color: var(--color-neutral-300);
+}
+
+.diet-v2__cal-day--selected {
+  background: var(--color-text-primary);
+  color: white;
+  font-weight: var(--font-weight-semibold);
+}
+
+.diet-v2__cal-day--selected:hover {
+  background: var(--color-neutral-700);
+}
+
+.diet-v2__cal-day--today {
+  background: var(--color-primary-100);
+  color: var(--color-primary-700);
+  font-weight: var(--font-weight-bold);
+}
+
+.diet-v2__cal-day--disabled {
+  color: var(--color-neutral-200);
+  cursor: not-allowed;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SECTION 1 — Week Scroller
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.diet-v2__week-scroller {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-1);
+  padding: var(--space-1) 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.diet-v2__week-scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.diet-v2__week-day {
+  flex: 1;
+  min-width: 52px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: var(--space-2) var(--space-2);
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  background: transparent;
+  border: none;
+  font-family: var(--font-family);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.diet-v2__week-day:hover {
+  background: var(--color-neutral-100);
+}
+
+.diet-v2__week-day-name {
+  font-size: 11px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+  text-transform: capitalize;
+  letter-spacing: 0.02em;
+}
+
+.diet-v2__week-day-num {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-fast);
+}
+
+/* Selected day */
+.diet-v2__week-day--selected .diet-v2__week-day-num {
+  background: var(--color-text-primary);
+  color: white;
+  border-radius: var(--radius-lg);
+}
+
+.diet-v2__week-day--selected .diet-v2__week-day-name {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Today indicator dot */
+.diet-v2__week-day--today .diet-v2__week-day-num::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--color-primary-500);
+}
+
+.diet-v2__week-day--today .diet-v2__week-day-num {
+  position: relative;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SECTION 2 — Summary Cards
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.diet-v2__summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+/* Base card style */
+.diet-v2__cal-card,
+.diet-v2__macro-card {
+  background: #F2F2F7;
+  border-radius: var(--radius-card);
+  padding: var(--space-4) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  border: none;
+  box-shadow: none;
+}
+
+/* ── Calories Card ── */
+.diet-v2__cal-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.diet-v2__cal-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.diet-v2__cal-title {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+
+.diet-v2__cal-stats {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4);
+}
+
+.diet-v2__cal-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.diet-v2__cal-stat-value {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  line-height: 1.1;
+}
+
+.diet-v2__cal-stat-value--remaining {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+
+.diet-v2__cal-stat-label {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-medium);
+}
+
+/* ── Macros Card ── */
+.diet-v2__macro-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.diet-v2__macro-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.diet-v2__macro-title {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+
+.diet-v2__macro-rings {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.diet-v2__macro-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+}
+
+.diet-v2__macro-ring-wrap {
+  position: relative;
+  width: 44px;
+  height: 44px;
+}
+
+.diet-v2__macro-ring-svg {
+  width: 44px;
+  height: 44px;
+  transform: rotate(-90deg);
+}
+
+.diet-v2__macro-ring-bg {
+  fill: none;
+  stroke: rgba(0, 0, 0, 0.08);
+  stroke-width: 4;
+}
+
+.diet-v2__macro-ring-fill {
+  fill: none;
+  stroke-width: 4;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.diet-v2__macro-ring-fill--carbs { stroke: var(--color-warning-500); }
+.diet-v2__macro-ring-fill--protein { stroke: var(--color-info-500); }
+.diet-v2__macro-ring-fill--fat { stroke: var(--color-primary-500); }
+
+.diet-v2__macro-ring-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 9px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  line-height: 1;
+}
+
+.diet-v2__macro-label {
+  font-size: 10px;
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-medium);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.diet-v2__macro-values {
+  font-size: 10px;
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Summary skeleton */
+.diet-v2__summary-skeleton {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.diet-v2__skeleton-card {
+  background: #F2F2F7;
+  border-radius: var(--radius-card);
+  height: 130px;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SECTION 3 — Empty State
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.diet-v2__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-16) var(--space-6);
+  gap: var(--space-4);
+  min-height: 340px;
+}
+
+.diet-v2__empty-wave {
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.diet-v2__empty-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+
+.diet-v2__empty-subtitle {
+  font-size: var(--font-size-base);
+  color: var(--color-text-muted);
+  line-height: var(--line-height-relaxed);
+  max-width: 300px;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SECTION 4 — Timeline Feed
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.diet-v2__feed {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.diet-v2__feed-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0 var(--space-1);
+}
+
+.diet-v2__feed-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: #F2F2F7;
+  border-radius: var(--radius-card);
+  transition: all var(--transition-fast);
+}
+
+.diet-v2__feed-item:hover {
+  background: #EDEDF0;
+}
+
+.diet-v2__feed-time {
+  font-size: 11px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-muted);
+  min-width: 52px;
+  padding-top: 2px;
+  flex-shrink: 0;
+}
+
+.diet-v2__feed-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.diet-v2__feed-name {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-tight);
+  margin-bottom: 4px;
+}
+
+.diet-v2__feed-macros {
+  display: flex;
+  gap: var(--space-3);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  flex-wrap: wrap;
+}
+
+.diet-v2__feed-cal {
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-secondary);
+}
+
+.diet-v2__feed-actions {
+  display: flex;
+  gap: var(--space-1);
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.diet-v2__feed-item:hover .diet-v2__feed-actions {
+  opacity: 1;
+}
+
+/* Always show on mobile (no hover) */
+@media (hover: none) {
+  .diet-v2__feed-actions {
+    opacity: 1;
+  }
+}
+
+.diet-v2__feed-action-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  transition: all var(--transition-fast);
+  background: none;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.diet-v2__feed-action-btn:hover {
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--color-text-secondary);
+}
+
+.diet-v2__feed-action-btn--delete:hover {
+  background: var(--color-error-50);
+  color: var(--color-error-500);
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.diet-v2__feed-spinning {
+  animation: spin 0.7s linear infinite;
+}
+
+/* ── Meal Category Badge ── */
+.diet-v2__feed-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: var(--font-weight-semibold);
+  padding: 1px var(--space-2);
+  border-radius: var(--radius-full);
+  background: var(--color-primary-50);
+  color: var(--color-primary-600);
+  margin-bottom: 4px;
+  text-transform: capitalize;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SECTION 5 — Suggestion Chips
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.diet-v2__chips-wrap {
+  position: fixed;
+  bottom: 68px; /* above input bar */
+  left: 0;
+  right: 0;
+  z-index: var(--z-sticky);
+  pointer-events: none;
+}
+
+.diet-v2__chips-inner {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+  pointer-events: auto;
+}
+
+.diet-v2__chips {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: var(--space-2) 0;
+}
+
+.diet-v2__chips::-webkit-scrollbar {
+  display: none;
+}
+
+.diet-v2__chip {
+  flex-shrink: 0;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-2xl);
+  background: white;
+  border: 1px solid var(--color-neutral-200);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-family: var(--font-family);
+  white-space: nowrap;
+  box-shadow: var(--shadow-xs);
+}
+
+.diet-v2__chip:hover {
+  background: var(--color-primary-50);
+  border-color: var(--color-primary-200);
+  color: var(--color-primary-600);
+}
+
+.diet-v2__chip:active {
+  transform: scale(0.96);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SECTION 6 — Bottom Input Bar
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.diet-v2__input-wrap {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-sticky);
+  background: white;
+  border-top: 1px solid var(--color-neutral-200);
+  padding: var(--space-3) var(--space-4);
+  padding-bottom: max(var(--space-3), env(safe-area-inset-bottom));
+}
+
+.diet-v2__input-inner {
+  max-width: 560px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: #F2F2F7;
+  border-radius: var(--radius-full);
+  padding: var(--space-2) var(--space-3);
+  transition: all var(--transition-fast);
+}
+
+.diet-v2__input-inner:focus-within {
+  background: #EDEDF0;
+  box-shadow: 0 0 0 2px var(--color-primary-200);
+}
+
+.diet-v2__input {
+  flex: 1;
+  border: none;
+  background: none;
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+  font-family: var(--font-family);
+  padding: var(--space-1) var(--space-2);
+  outline: none;
+  min-width: 0;
+}
+
+.diet-v2__input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.diet-v2__input-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.diet-v2__input-btn:hover {
+  color: var(--color-text-secondary);
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.diet-v2__input-btn--send {
+  background: var(--color-text-primary);
+  color: white;
+  width: 34px;
+  height: 34px;
+}
+
+.diet-v2__input-btn--send:hover {
+  background: var(--color-neutral-700);
+  color: white;
+}
+
+.diet-v2__input-btn--send:disabled {
+  background: var(--color-neutral-300);
+  cursor: not-allowed;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SECTION 7 — Inline Confirmation
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.diet-v2__confirm-wrap {
+  position: fixed;
+  bottom: 68px;
+  left: 0;
+  right: 0;
+  z-index: calc(var(--z-sticky) + 1);
+  padding: 0 var(--space-4);
+}
+
+.diet-v2__confirm {
+  max-width: 560px;
+  margin: 0 auto;
+  background: white;
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--color-neutral-200);
+  overflow: hidden;
+}
+
+.diet-v2__confirm-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-neutral-100);
+}
+
+.diet-v2__confirm-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-success-600);
+}
+
+.diet-v2__confirm-cals {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary-600);
+  background: var(--color-primary-50);
+  padding: 2px var(--space-3);
+  border-radius: var(--radius-full);
+}
+
+.diet-v2__confirm-items {
+  max-height: 200px;
+  overflow-y: auto;
+  padding: var(--space-2) var(--space-4);
+}
+
+/* ── Edit Log Selects ── */
+.diet-v2__edit-select {
+  border: none;
+  background: transparent;
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  outline: none;
+  cursor: pointer;
+  padding: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: var(--color-neutral-300);
+}
+
+.diet-v2__editable-select {
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  outline: none;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 4px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border-bottom: 1px dashed transparent;
+  transition: border-color var(--transition-fast);
+}
+
+.diet-v2__editable-select:focus,
+.diet-v2__editable-select:hover {
+  border-bottom-color: var(--color-primary-400);
+}
+
+.diet-v2__editable-wrap {
+  position: relative;
+  display: inline-flex;
+  vertical-align: baseline;
+}
+
+.diet-v2__editable-measure {
+  visibility: hidden;
+  white-space: pre;
+  padding: 0 1px;
+}
+
+.diet-v2__editable-input {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  outline: none;
+  padding: 0;
+  margin: 0;
+  border-bottom: 1px dashed transparent;
+  transition: border-color var(--transition-fast);
+  text-align: inherit;
+}
+
+.diet-v2__editable-input:focus,
+.diet-v2__editable-input:hover {
+  border-bottom-color: var(--color-primary-400);
+}
+
+.diet-v2__editable-qty {
+  min-width: 1.5ch;
+  text-align: center;
+}
+
+.diet-v2__editable-input[type="number"]::-webkit-inner-spin-button, 
+.diet-v2__editable-input[type="number"]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+.diet-v2__editable-input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.diet-v2__confirm-item-container {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--color-neutral-50);
+}
+
+.diet-v2__confirm-item-container:last-child {
+  border-bottom: none;
+}
+
+.diet-v2__confirm-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.diet-v2__confirm-suggestion {
+  font-size: 11px;
+  color: var(--color-primary-600);
+  background: var(--color-primary-50);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  margin-top: 4px;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: background var(--transition-fast);
+}
+
+.diet-v2__confirm-suggestion:hover {
+  background: var(--color-primary-100);
+}
+
+.diet-v2__confirm-item-name {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.diet-v2__confirm-item-name span {
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-xs);
+}
+
+.diet-v2__confirm-item-macros {
+  display: flex;
+  gap: var(--space-2);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.diet-v2__confirm-item-cal {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+}
+
+.diet-v2__confirm-actions {
+  display: flex;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--color-neutral-100);
+  justify-content: flex-end;
+}
+
+.diet-v2__confirm-btn {
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-family: var(--font-family);
+  border: none;
+}
+
+.diet-v2__confirm-btn--cancel {
+  background: none;
+  color: var(--color-text-muted);
+}
+
+.diet-v2__confirm-btn--cancel:hover {
+  color: var(--color-text-primary);
+  background: var(--color-neutral-100);
+}
+
+.diet-v2__confirm-btn--save {
+  background: var(--color-text-primary);
+  color: white;
+}
+
+.diet-v2__confirm-btn--save:hover {
+  background: var(--color-neutral-700);
+}
+
+.diet-v2__confirm-btn--save:disabled {
+  background: var(--color-neutral-300);
+  cursor: not-allowed;
+}
+
+/* ── Parsing Overlay ── */
+.diet-v2__parsing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-8) var(--space-4);
+  text-align: center;
+}
+
+.diet-v2__parsing-spinner {
+  color: var(--color-primary-500);
+  animation: spin 0.8s linear infinite;
+}
+
+.diet-v2__parsing-text {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.diet-v2__parsing-sub {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+/* ── Error state ── */
+.diet-v2__error {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-error-50);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-sm);
+  color: var(--color-error-600);
+  margin: 0 var(--space-4);
+}
+
+.diet-v2__error a {
+  margin-left: auto;
+  color: var(--color-primary-500);
+  font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   RESPONSIVE
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+@media (max-width: 768px) {
+  .diet-v2 {
+    padding-bottom: calc(160px + 64px); /* input + chips + mobile nav */
+  }
+
+  .diet-v2__chips-wrap {
+    bottom: calc(68px + 64px); /* above input + mobile nav */
+  }
+
+  .diet-v2__input-wrap {
+    bottom: 64px; /* above mobile nav */
+  }
+
+  .diet-v2__confirm-wrap {
+    bottom: calc(68px + 64px);
+  }
+
+  .diet-v2__summary {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 769px) {
+  .diet-v2 {
+    max-width: 600px;
+    padding-bottom: 180px;
+  }
+
+  .diet-v2__feed-item {
+    padding: var(--space-4) var(--space-5);
+  }
+
+  .diet-v2__cal-card,
+  .diet-v2__macro-card {
+    padding: var(--space-5);
+  }
+
+  .diet-v2__macro-ring-wrap {
+    width: 52px;
+    height: 52px;
+  }
+
+  .diet-v2__macro-ring-svg {
+    width: 52px;
+    height: 52px;
+  }
+
+  .diet-v2__macro-ring-text {
+    font-size: 10px;
+  }
+}
