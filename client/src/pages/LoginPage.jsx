@@ -1,9 +1,20 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { Button, Input } from '../components/shared';
 import './AuthPages.css';
+
+const staggerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.3 } }
+};
 
 export default function LoginPage() {
   const { login, error, setError } = useAuth();
@@ -36,7 +47,13 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="auth-page">
+    <motion.div 
+      className="auth-page"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+    >
       <div className="auth-page__left">
         <div className="auth-page__brand">
           <div className="auth-page__logo">
@@ -57,20 +74,34 @@ export default function LoginPage() {
           <h1>Your AI fitness partner,<br />designed for India.</h1>
           <p>Track nutrition, get personalized workouts, and chat with your AI coach — all in one place.</p>
         </div>
-        <div className="auth-page__features">
-          <div className="auth-feature">
+        <motion.div 
+          className="auth-page__features"
+          variants={staggerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          <motion.div className="auth-feature" variants={itemVariants}>
             <span className="auth-feature__icon">🍛</span>
-            <span>Indian food calorie tracking</span>
-          </div>
-          <div className="auth-feature">
-            <span className="auth-feature__icon">💪</span>
-            <span>Adaptive workout plans</span>
-          </div>
-          <div className="auth-feature">
+            <div className="auth-feature__text">
+              <span className="auth-feature__title">AI Nutrition</span>
+              <span className="auth-feature__desc">Log meals instantly via typing and understand your exact macros.</span>
+            </div>
+          </motion.div>
+          <motion.div className="auth-feature" variants={itemVariants}>
+            <span className="auth-feature__icon">🏋️</span>
+            <div className="auth-feature__text">
+              <span className="auth-feature__title">Adaptive Workouts</span>
+              <span className="auth-feature__desc">Personalized training plans that evolve with your daily progress.</span>
+            </div>
+          </motion.div>
+          <motion.div className="auth-feature" variants={itemVariants}>
             <span className="auth-feature__icon">🤖</span>
-            <span>AI coach that speaks your language</span>
-          </div>
-        </div>
+            <div className="auth-feature__text">
+              <span className="auth-feature__title">Arya AI Coach</span>
+              <span className="auth-feature__desc">An intelligent fitness partner that remembers your history and goals.</span>
+            </div>
+          </motion.div>
+        </motion.div>
       </div>
 
       <div className="auth-page__right">
@@ -105,6 +136,16 @@ export default function LoginPage() {
               required
             />
 
+            <div className="auth-options">
+              <label className="auth-checkbox">
+                <input type="checkbox" name="remember" />
+                <span>Remember me</span>
+              </label>
+              <Link to="/forgot-password" className="auth-link" style={{ fontSize: 'var(--font-size-sm)' }}>
+                Forgot Password?
+              </Link>
+            </div>
+
             {error && <div className="auth-error">{error}</div>}
 
             <Button
@@ -116,7 +157,21 @@ export default function LoginPage() {
               icon={ArrowRight}
               iconPosition="right"
             >
-              Sign In
+              {loading ? 'Signing you in...' : 'Sign In'}
+            </Button>
+
+            <div className="auth-divider">
+              <span>OR</span>
+            </div>
+
+            <Button
+              type="button"
+              variant="secondary"
+              size="lg"
+              fullWidth
+              disabled
+            >
+              Continue with Google
             </Button>
           </form>
 
@@ -128,6 +183,6 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

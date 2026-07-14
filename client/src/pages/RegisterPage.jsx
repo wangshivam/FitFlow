@@ -1,9 +1,36 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, User, ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { Button, Input } from '../components/shared';
 import './AuthPages.css';
+
+const staggerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.3 } }
+};
+
+const getPasswordStrength = (password) => {
+  if (!password) return 0;
+  if (password.length < 6) return 1;
+  if (password.length < 8) return 2;
+  if (/[A-Z]/.test(password) && /[0-9]/.test(password) && password.length >= 8) return 4;
+  return 3;
+};
+
+const getStrengthLabel = (strength) => {
+  if (strength === 0) return '';
+  if (strength <= 1) return 'Weak';
+  if (strength === 2) return 'Fair';
+  if (strength === 3) return 'Good';
+  return 'Strong';
+};
 
 export default function RegisterPage() {
   const { register, error, setError } = useAuth();
@@ -47,7 +74,13 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="auth-page">
+    <motion.div 
+      className="auth-page"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+    >
       <div className="auth-page__left">
         <div className="auth-page__brand">
           <div className="auth-page__logo">
@@ -68,20 +101,34 @@ export default function RegisterPage() {
           <h1>Start your fitness journey today.</h1>
           <p>Join thousands of Indians transforming their health with AI-powered guidance.</p>
         </div>
-        <div className="auth-page__features">
-          <div className="auth-feature">
-            <span className="auth-feature__icon">✅</span>
-            <span>Free to start, no credit card needed</span>
-          </div>
-          <div className="auth-feature">
-            <span className="auth-feature__icon">🇮🇳</span>
-            <span>Built for Indian food & lifestyle</span>
-          </div>
-          <div className="auth-feature">
-            <span className="auth-feature__icon">🔒</span>
-            <span>Your data stays private & secure</span>
-          </div>
-        </div>
+        <motion.div 
+          className="auth-page__features"
+          variants={staggerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          <motion.div className="auth-feature" variants={itemVariants}>
+            <span className="auth-feature__icon">🍛</span>
+            <div className="auth-feature__text">
+              <span className="auth-feature__title">AI Nutrition</span>
+              <span className="auth-feature__desc">Log meals instantly via typing and understand your exact macros.</span>
+            </div>
+          </motion.div>
+          <motion.div className="auth-feature" variants={itemVariants}>
+            <span className="auth-feature__icon">🏋️</span>
+            <div className="auth-feature__text">
+              <span className="auth-feature__title">Adaptive Workouts</span>
+              <span className="auth-feature__desc">Personalized training plans that evolve with your daily progress.</span>
+            </div>
+          </motion.div>
+          <motion.div className="auth-feature" variants={itemVariants}>
+            <span className="auth-feature__icon">🤖</span>
+            <div className="auth-feature__text">
+              <span className="auth-feature__title">Arya AI Coach</span>
+              <span className="auth-feature__desc">An intelligent fitness partner that remembers your history and goals.</span>
+            </div>
+          </motion.div>
+        </motion.div>
       </div>
 
       <div className="auth-page__right">
@@ -118,18 +165,33 @@ export default function RegisterPage() {
               required
             />
 
-            <Input
-              label="Password"
-              name="password"
-              type="password"
-              placeholder="At least 8 characters"
-              icon={Lock}
-              value={form.password}
-              onChange={handleChange}
-              error={formErrors.password}
-              autoComplete="new-password"
-              required
-            />
+            <div>
+              <Input
+                label="Password"
+                name="password"
+                type="password"
+                placeholder="At least 8 characters"
+                icon={Lock}
+                value={form.password}
+                onChange={handleChange}
+                error={formErrors.password}
+                autoComplete="new-password"
+                required
+              />
+              {form.password && (
+                <div>
+                  <div className="password-strength">
+                    <div className={`password-strength__bar ${getPasswordStrength(form.password) >= 1 ? 'password-strength__bar--active weak' : ''}`} />
+                    <div className={`password-strength__bar ${getPasswordStrength(form.password) >= 2 ? 'password-strength__bar--active fair' : ''}`} />
+                    <div className={`password-strength__bar ${getPasswordStrength(form.password) >= 3 ? 'password-strength__bar--active good' : ''}`} />
+                    <div className={`password-strength__bar ${getPasswordStrength(form.password) >= 4 ? 'password-strength__bar--active strong' : ''}`} />
+                  </div>
+                  <div style={{ fontSize: '12px', color: 'var(--color-text-muted)', marginTop: '4px', textAlign: 'right' }}>
+                    {getStrengthLabel(getPasswordStrength(form.password))}
+                  </div>
+                </div>
+              )}
+            </div>
 
             <Input
               label="Confirm Password"
@@ -155,7 +217,7 @@ export default function RegisterPage() {
               icon={ArrowRight}
               iconPosition="right"
             >
-              Create Account
+              {loading ? 'Creating Account...' : 'Create Account'}
             </Button>
           </form>
 
@@ -167,6 +229,6 @@ export default function RegisterPage() {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

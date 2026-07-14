@@ -1,5 +1,6 @@
 import { forwardRef, useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import './Input.css';
 
 const Input = forwardRef(({
@@ -64,8 +65,20 @@ const Input = forwardRef(({
         )}
         {suffix && <span className="input-suffix">{suffix}</span>}
       </div>
-      {error && <span className="input-error">{error}</span>}
-      {hint && !error && <span className="input-hint">{hint}</span>}
+      <AnimatePresence>
+        {error && (
+          <motion.span 
+            className="input-error"
+            initial={{ opacity: 0, height: 0, marginTop: 0 }}
+            animate={{ opacity: 1, height: 'auto', marginTop: 4 }}
+            exit={{ opacity: 0, height: 0, marginTop: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            {error}
+          </motion.span>
+        )}
+      </AnimatePresence>
+      {!error && hint && <span className="input-hint">{hint}</span>}
     </div>
   );
 });
