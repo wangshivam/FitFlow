@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight, Play, Menu, X, Check,
@@ -162,16 +162,86 @@ const STEPS = [
 ];
 
 const MEMORY_TAGS = [
-  { icon: '🎯', text: 'Goal: Fat Loss', highlight: true },
-  { icon: '🍳', text: 'Fav: Paneer, Eggs, Roti' },
-  { icon: '🏋️', text: 'Skipped leg day Tue' },
-  { icon: '😴', text: 'Sleep: 6h avg' },
-  { icon: '💬', text: 'Recent chats: 12' },
-  { icon: '🥛', text: 'Lactose tolerant' },
-  { icon: '🏠', text: 'Home workouts preferred' },
-  { icon: '📊', text: 'Protein target: 100g' },
-  { icon: '🕐', text: 'Usually eats dinner at 9pm' },
-  { icon: '💪', text: 'Upper body day today' },
+  {
+    icon: '🎯',
+    text: 'Goal: Fat Loss',
+    demoTitle: 'Arya permanently remembers your goal.',
+    demoDesc: 'Every calorie recommendation, meal suggestion and workout adapts automatically.',
+    aiMessage: "I noticed your goal is Fat Loss.\nI've reduced today's calories by 120 because yesterday you exceeded your target.\nWould you like a high-protein dinner instead?",
+    action: 'Suggest Dinner'
+  },
+  {
+    icon: '🍳',
+    text: 'Fav: Paneer, Eggs, Roti',
+    demoTitle: 'Arya remembers foods you actually enjoy.',
+    demoDesc: 'Instead of generic meal plans, recommendations stay realistic.',
+    aiMessage: "You usually enjoy Paneer and Eggs.\nHere's a healthier version with 32g protein.",
+    action: 'View Meal'
+  },
+  {
+    icon: '🏋️',
+    text: 'Skipped leg day Tue',
+    demoTitle: 'Arya remembers missed workouts.',
+    demoDesc: 'Instead of breaking your plan, it intelligently reschedules.',
+    aiMessage: "Looks like Tuesday's Leg Workout was skipped.\nI've moved it to Thursday and adjusted recovery.",
+    action: 'Accept Changes'
+  },
+  {
+    icon: '😴',
+    text: 'Sleep: 6h avg',
+    demoTitle: 'Arya tracks recovery.',
+    demoDesc: '',
+    aiMessage: "You averaged only 6 hours of sleep.\nToday's workout intensity has been reduced by 10%.",
+    action: 'See Why'
+  },
+  {
+    icon: '💬',
+    text: 'Recent chats: 12',
+    demoTitle: 'Arya remembers previous conversations.',
+    demoDesc: '',
+    aiMessage: "Last week you asked for vegetarian protein sources.\nI've included more paneer, soy chunks and lentils in today's suggestions.",
+    action: ''
+  },
+  {
+    icon: '🥛',
+    text: 'Lactose tolerant',
+    demoTitle: 'Arya filters recommendations automatically.',
+    demoDesc: '',
+    aiMessage: "Milk-based recipes are allowed.\nProtein shakes are included in today's meal plan.",
+    action: ''
+  },
+  {
+    icon: '🏠',
+    text: 'Home workouts preferred',
+    demoTitle: 'Arya adapts to your environment.',
+    demoDesc: '',
+    aiMessage: "No gym today?\nI've converted your Push Workout into a bodyweight version.",
+    action: ''
+  },
+  {
+    icon: '📊',
+    text: 'Protein target: 100g',
+    demoTitle: 'Arya tracks specific macro goals.',
+    demoDesc: '',
+    aiMessage: "Today's target: 100g\nCurrent: 72g\nRemaining: 28g\nSuggested Meal: Paneer Sandwich",
+    action: ''
+  },
+  {
+    icon: '🕐',
+    text: 'Usually eats dinner at 9pm',
+    demoTitle: 'Arya learns your schedule.',
+    demoDesc: '',
+    aiMessage: "It's almost 9 PM.\nBased on your routine, here's tonight's dinner.",
+    action: ''
+  },
+  {
+    icon: '💪',
+    text: 'Upper body day today',
+    demoTitle: 'Arya prepares your session.',
+    demoDesc: '',
+    aiMessage: "Today's workout: Upper Body\nEstimated Time: 42 min\nReady to begin?",
+    action: ''
+  },
 ];
 
 const TESTIMONIALS = [
@@ -727,6 +797,24 @@ function StepsSection() {
 
 // ── 8. AI Memory ──
 function MemorySection() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isTyping, setIsTyping] = useState(false);
+
+  const handleChipClick = (index) => {
+    if (activeIndex === index) return;
+    setActiveIndex(index);
+    setIsTyping(true);
+  };
+
+  useEffect(() => {
+    if (isTyping) {
+      const timer = setTimeout(() => setIsTyping(false), 400);
+      return () => clearTimeout(timer);
+    }
+  }, [isTyping, activeIndex]);
+
+  const activeData = MEMORY_TAGS[activeIndex];
+
   return (
     <section className="landing-memory">
       <div className="landing__section">
@@ -736,24 +824,73 @@ function MemorySection() {
               <div className="landing__section-label">
                 <Brain size={14} /> AI Memory
               </div>
-              <h2 className="landing-memory__title">Arya remembers everything about you</h2>
-              <p className="landing-memory__desc">
-                Most fitness apps treat every session like a fresh start. Arya builds a persistent understanding of your goals, preferences, routines, and history — getting smarter and more personalized every day.
-              </p>
-              <p className="landing-memory__note">
-                "The more you use FitFlow, the better Arya understands you — like a real coach who's been with you for months."
-              </p>
+
+              <div className="landing-memory__demo-wrapper">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeIndex}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.25, ease: "easeInOut" }}
+                    className="landing-memory__demo-content"
+                  >
+                    <h2 className="landing-memory__title">{activeData.demoTitle}</h2>
+                    {activeData.demoDesc && (
+                      <p className="landing-memory__desc">{activeData.demoDesc}</p>
+                    )}
+
+                    <div className="landing-memory__demo-chat-container">
+                      <div className="landing-memory__demo-chat-header">
+                        <Bot size={14} className="landing-memory__demo-bot-icon" />
+                        <span>Arya</span>
+                      </div>
+                      
+                      {isTyping ? (
+                        <div className="landing-memory__demo-typing">
+                          <span className="dot"></span>
+                          <span className="dot"></span>
+                          <span className="dot"></span>
+                        </div>
+                      ) : (
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ duration: 0.2 }}
+                          className="landing-memory__demo-chat-bubble"
+                        >
+                          {activeData.aiMessage.split('\n').map((line, i) => (
+                            <p key={i}>{line}</p>
+                          ))}
+                          {activeData.action && (
+                            <button className="landing-memory__demo-btn">
+                              {activeData.action}
+                            </button>
+                          )}
+                        </motion.div>
+                      )}
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
             </div>
 
             <div className="landing-memory__brain">
-              {MEMORY_TAGS.map((tag, i) => (
-                <FadeUp key={tag.text} delay={i * 0.06}>
-                  <div className={`landing-memory__tag ${tag.highlight ? 'landing-memory__tag--highlight' : ''}`}>
-                    <span className="landing-memory__tag-icon">{tag.icon}</span>
-                    {tag.text}
-                  </div>
-                </FadeUp>
-              ))}
+              {MEMORY_TAGS.map((tag, i) => {
+                const isActive = activeIndex === i;
+                return (
+                  <FadeUp key={tag.text} delay={i * 0.04}>
+                    <button 
+                      className={`landing-memory__tag ${isActive ? 'landing-memory__tag--highlight' : ''}`}
+                      onClick={() => handleChipClick(i)}
+                      aria-pressed={isActive}
+                    >
+                      <span className="landing-memory__tag-icon">{tag.icon}</span>
+                      {tag.text}
+                    </button>
+                  </FadeUp>
+                );
+              })}
             </div>
           </div>
         </FadeUp>
