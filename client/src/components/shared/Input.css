@@ -36,7 +36,7 @@
 }
 
 .input-field:focus {
-  border-color: #F97316;
+  border-color: var(--color-primary-500);
   box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.2);
   outline: none;
 }
@@ -104,7 +104,7 @@
 }
 
 .input-container:focus-within .input-icon {
-  color: #F97316;
+  color: var(--color-primary-500);
 }
 
 .input-toggle-password {

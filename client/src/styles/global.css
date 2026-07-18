@@ -37,6 +37,19 @@ body {
   min-height: 100vh;
 }
 
+/* ── Theme Transitions ── */
+html[data-theme],
+html[data-theme] *,
+html[data-theme] *::before,
+html[data-theme] *::after {
+  transition: background-color 300ms ease-in-out,
+              color 300ms ease-in-out,
+              border-color 300ms ease-in-out,
+              box-shadow 300ms ease-in-out,
+              fill 300ms ease-in-out,
+              stroke 300ms ease-in-out;
+}
+
 /* ── Typography ── */
 h1, h2, h3, h4, h5, h6 {
   font-weight: var(--font-weight-semibold);

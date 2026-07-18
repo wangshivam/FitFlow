@@ -1,27 +1,18 @@
 import { z } from 'zod';
 
-// ── Parsed food item from LLM (NO MACROS) ──
+// ── Parsed food item from LLM (WITH MACROS) ──
 export const llmParsedFoodItemSchema = z.object({
   food_name: z.string().min(1),
-  food_name_hi: z.string().default(''),
   quantity: z.number().min(0.1).max(100),
-  unit: z.enum([
-    'piece', 'katori', 'plate', 'glass', 'cup', 'scoop',
-    'gram', 'ml', 'tablespoon', 'handful', 'slice', 'bowl', 'packet'
-  ]),
-  confidence: z.number().min(0).max(1).default(0.8),
+  unit: z.string().min(1),
+  calories: z.number().min(0),
+  protein: z.number().min(0),
+  carbs: z.number().min(0),
+  fats: z.number().min(0),
 });
 
-// ── LLM response shape (v3) ──
-export const llmResponseSchema = z.object({
-  items: z.array(llmParsedFoodItemSchema).min(1).max(20),
-  meal_suggestion: z.enum([
-    'breakfast', 'morning_chai', 'lunch', 'evening_snack',
-    'dinner', 'pre_workout', 'post_workout',
-  ]).optional().default('lunch'),
-  needs_clarification: z.boolean().optional().default(false),
-  clarification_question: z.string().nullable().optional().default(null),
-});
+// ── LLM response shape (v4) ──
+export const llmResponseSchema = z.array(llmParsedFoodItemSchema);
 
 // ── Food parse request (user input) ──
 export const foodParseSchema = z.object({

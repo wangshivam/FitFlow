@@ -1,0 +1,86 @@
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 9999px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: background-color 0.25s ease-in-out, transform 0.15s ease-out, color 0.25s ease-in-out;
+  flex-shrink: 0;
+  outline: none;
+}
+
+/* Base styles for both authenticated app and landing page */
+.theme-toggle:hover {
+  background-color: var(--color-surface-hover, rgba(0, 0, 0, 0.05));
+  color: var(--color-text-primary, #1A1A1A);
+}
+
+[data-theme="dark"] .theme-toggle:hover {
+  background-color: var(--color-surface-hover, rgba(255, 255, 255, 0.1));
+  color: var(--color-text-primary, #F1F1F1);
+}
+
+.theme-toggle:active {
+  transform: scale(0.97);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--color-primary-400, #FB923C);
+  outline-offset: 2px;
+}
+
+.theme-toggle__icon-wrapper {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-toggle__icon {
+  position: absolute;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Light mode state */
+.theme-toggle__icon-wrapper--light .theme-toggle__icon--sun {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+.theme-toggle__icon-wrapper--light .theme-toggle__icon--moon {
+  opacity: 0;
+  transform: rotate(90deg) scale(0);
+}
+
+/* Dark mode state */
+.theme-toggle__icon-wrapper--dark .theme-toggle__icon--sun {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0);
+}
+
+.theme-toggle__icon-wrapper--dark .theme-toggle__icon--moon {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+/* Specific styling when placed inside the landing nav */
+.landing-nav__actions .theme-toggle {
+  color: var(--landing-text-secondary, #6B7280);
+}
+
+.landing-nav__actions .theme-toggle:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: var(--landing-text, #111827);
+}
+
+[data-theme="dark"] .landing-nav__actions .theme-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--landing-text, #F1F1F1);
+}

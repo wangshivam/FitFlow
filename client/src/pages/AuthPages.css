@@ -20,6 +20,10 @@
   overflow: hidden;
 }
 
+[data-theme="dark"] .auth-page__left {
+  background: linear-gradient(135deg, #1C1410 0%, #231D15 50%, #0C0A09 100%);
+}
+
 .auth-page__left::before {
   content: '';
   position: absolute;
@@ -116,6 +120,11 @@
   border: 1px solid rgba(255, 255, 255, 0.8);
   transition: all var(--transition-base);
   cursor: default;
+}
+
+[data-theme="dark"] .auth-feature {
+  background: rgba(41, 37, 36, 0.5);
+  border-color: rgba(68, 64, 60, 0.5);
 }
 
 .auth-feature:hover {

@@ -387,6 +387,10 @@
   animation: slideDown var(--transition-slow) ease-out;
 }
 
+[data-theme="dark"] .dashboard__onboarding-banner {
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.1), rgba(249, 115, 22, 0.05));
+}
+
 .dashboard__onboarding-banner svg {
   color: var(--color-primary-500);
   flex-shrink: 0;

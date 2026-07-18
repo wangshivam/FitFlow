@@ -7,6 +7,7 @@ import {
   Brain, Zap, BarChart3, Heart, Apple, Send, Bot,
   Flame, Users, Target, Activity,
 } from 'lucide-react';
+import { ThemeToggle } from '../components/shared';
 import './LandingPage.css';
 
 // ── Flame Logo SVG (reused from index.html) ──
@@ -262,6 +263,7 @@ function Navbar({ onScrollTo }) {
         </ul>
 
         <div className="landing-nav__actions">
+          <ThemeToggle />
           <Link to="/login" className="landing-nav__login">Log In</Link>
           <Link to="/register" className="landing-nav__cta">
             Start Free <ArrowRight size={14} />

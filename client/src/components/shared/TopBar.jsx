@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import Avatar from './Avatar';
 import Modal from './Modal';
 import Button from './Button';
+import ThemeToggle from './ThemeToggle';
 import './TopBar.css';
 
 export default function TopBar({ user }) {
@@ -51,6 +52,7 @@ export default function TopBar({ user }) {
         </div>
       </div>
       <div className="topbar__right">
+        <ThemeToggle />
         <Avatar
           src={user?.avatar_url}
           name={user?.name || 'User'}
